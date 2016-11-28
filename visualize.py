@@ -10,13 +10,13 @@ from nltk.corpus import stopwords
 
 cachedStopWords = stopwords.words("english")
 
-FILE_NAME = './models/dum_mod.mdl'
+# FILE_NAME = './models/dum_mod.mdl'
 
 def main():
-    # embeddings_file = sys.argv[1]
-    model = gensim.models.Word2Vec.load(FILE_NAME)
-
-    top_100_words = model.index2word[:1000]
+    embeddings_file = sys.argv[1]
+    model = gensim.models.Word2Vec.load(embeddings_file)
+    top_n = int(sys.argv[2])
+    top_100_words = model.index2word[:top_n]
     wo_stopwords = [word for word in top_100_words if word not in cachedStopWords and len(word) > 1]
 
     vec_array = [model[word] for word in wo_stopwords]
@@ -40,4 +40,7 @@ def load_embeddings(file_name):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print 'usage: visualize.py mdl_path top_n_words'
+        exit()
     main()
